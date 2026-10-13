@@ -1,0 +1,238 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Royal Road Shoutout Builder</title>
+<style>
+:root{--bg:#f6f4f0;--panel:#fff;--ink:#1d1b24;--mute:#6b6778;--line:#ddd8e4;--brand:#5b3fa8;--brand-ink:#fff}
+@media (prefers-color-scheme:dark){:root{--bg:#14121a;--panel:#1d1a26;--ink:#ece8f5;--mute:#9c96ad;--line:#35304a;--brand:#9b7bf0;--brand-ink:#14121a}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.5 Georgia,"Iowan Old Style",serif}
+h1,h2,label,button,input,textarea,.hint{font-family:system-ui,-apple-system,"Segoe UI",sans-serif}
+header{padding:24px 24px 8px;max-width:1300px;margin:0 auto}
+h1{margin:0 0 4px;font-size:26px}
+header p{margin:0;color:var(--mute);font-family:system-ui,sans-serif;font-size:15px}
+main{display:grid;grid-template-columns:380px 1fr;gap:20px;max-width:1300px;margin:0 auto;padding:16px 24px 48px;align-items:start}
+@media (max-width:900px){main{grid-template-columns:1fr}}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:16px 18px;margin-bottom:16px}
+h2{font-size:15px;margin:0 0 12px;font-weight:700}
+.hint{color:var(--mute);font-size:13px;margin:-6px 0 12px}
+label{display:block;font-size:14px;margin:10px 0 4px}
+input[type=text],textarea{width:100%;padding:8px 10px;border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--ink);font-size:14px}
+textarea{resize:vertical;min-height:90px;font-family:system-ui,sans-serif}
+.row2{display:flex;gap:8px;flex-wrap:wrap}
+button{cursor:pointer;border:1px solid var(--line);background:var(--bg);color:var(--ink);padding:8px 14px;border-radius:6px;font-size:14px}
+button:hover{border-color:var(--brand)}
+button:focus-visible,input:focus-visible,textarea:focus-visible{outline:2px solid var(--brand);outline-offset:2px}
+button.primary{background:var(--brand);color:var(--brand-ink);border-color:var(--brand);font-weight:700;padding:10px 18px}
+.color{display:flex;align-items:center;gap:10px;margin:8px 0}
+.color input{width:44px;height:32px;padding:0;border:1px solid var(--line);border-radius:5px;background:none;cursor:pointer}
+.color span{flex:1;font-family:system-ui,sans-serif;font-size:14px}
+.color code{font-size:12px;color:var(--mute)}
+.name{display:flex;gap:8px;align-items:center;margin:8px 0}
+.name input[type=text]{flex:1}
+.name input[type=color]{width:44px;height:34px;padding:0;border:1px solid var(--line);border-radius:5px;background:none;cursor:pointer}
+.check{display:flex;gap:8px;align-items:center;margin:10px 0;font-size:14px;font-family:system-ui,sans-serif}
+.check input{width:18px;height:18px}
+.sticky{position:sticky;top:12px}
+.pv{container-type:inline-size;background:#fff;padding:14px;border-radius:8px;border:1px solid var(--line)}
+.pv .row{display:flex;flex-wrap:wrap}
+.pv .col-md-3{width:25%}.pv .col-md-9{width:75%}
+.pv table{font-family:Georgia,serif;color:#000}
+.pv img{max-width:100%;display:block;margin:0 auto}
+@container (max-width:600px){.pv .col-md-3,.pv .col-md-9{width:100%}.pv .col-md-3 img{max-width:240px}}
+textarea.out{min-height:160px;font-family:ui-monospace,Consolas,monospace;font-size:12px}
+.ok{color:var(--brand);font-weight:700;font-family:system-ui,sans-serif;font-size:14px;margin-left:8px}
+ol.steps{margin:0;padding-left:20px;font-family:system-ui,sans-serif;font-size:14px;color:var(--mute)}
+</style>
+</head>
+<body>
+<header>
+  <h1>Royal Road shoutout builder</h1>
+  <p>Change the colors and text on the left. The preview updates as you go. When you like it, press <b>Copy HTML</b>.</p>
+</header>
+
+<main>
+<div>
+  <div class="panel">
+    <h2>1. Pick a starting look</h2>
+    <div class="row2">
+      <button id="p-navy">Navy &amp; gold</button>
+      <button id="p-cover">Cover glow</button>
+      <button id="p-reset">Start over</button>
+    </div>
+  </div>
+
+  <div class="panel">
+    <h2>2. Colors</h2>
+    <p class="hint">Click a swatch to choose a new color.</p>
+    <div id="colors"></div>
+  </div>
+
+  <div class="panel">
+    <h2>3. Extras</h2>
+    <div class="check"><input type="checkbox" id="strips"><label for="strips" style="margin:0">Four-color strips at the top and bottom</label></div>
+    <div class="check"><input type="checkbox" id="boldFirst"><label for="boldFirst" style="margin:0">Bold the first sentence</label></div>
+    <div class="check"><input type="checkbox" id="colorNames"><label for="colorNames" style="margin:0">Color the character names</label></div>
+    <p class="hint" style="margin-top:12px">Names and their colors (also used for the strips):</p>
+    <div id="names"></div>
+  </div>
+
+  <div class="panel">
+    <h2>4. Your story</h2>
+    <label for="title">Title</label><input type="text" id="title">
+    <label for="tag">Tagline (leave empty to hide)</label><input type="text" id="tag">
+    <label for="desc">Description (leave a blank line between paragraphs)</label><textarea id="desc" rows="10"></textarea>
+    <label for="url">Link to the story</label><input type="text" id="url">
+    <label for="cover">Cover image link</label><input type="text" id="cover">
+    <label for="btn">Button text</label><input type="text" id="btn">
+  </div>
+</div>
+
+<div class="sticky">
+  <div class="panel">
+    <h2>Preview</h2>
+    <div class="pv" id="pv"></div>
+    <p class="hint" style="margin:10px 0 0">Royal Road may space things slightly differently. The colors will match.</p>
+  </div>
+  <div class="panel">
+    <h2>5. Copy the HTML</h2>
+    <div class="row2" style="margin-bottom:10px">
+      <button class="primary" id="copy">Copy HTML</button><span class="ok" id="ok"></span>
+    </div>
+    <textarea class="out" id="out" readonly aria-label="Generated HTML"></textarea>
+    <p class="hint" style="margin:12px 0 6px">To use it on Royal Road:</p>
+    <ol class="steps">
+      <li>Open your post or forum thread editor.</li>
+      <li>Switch to the source or HTML view (the <code>&lt;&gt;</code> button).</li>
+      <li>Paste, then switch back to check it.</li>
+    </ol>
+  </div>
+</div>
+</main>
+
+<script>
+const DEFAULT_TEXT = {
+  title: "Kismet: A Cultivation LitRPG Story",
+  tag: "Cultivation • LitRPG • Brotherhood",
+  url: "https://www.royalroad.com/fiction/198033/kismet-a-cultivation-litrpg-story",
+  cover: "https://www.royalroadcdn.com/public/covers-large/198033-kismet-a-cultivation-litrpg-story.jpg?time=1791837774",
+  btn: "Read Now »",
+  desc: "The boys have six years until they get snatched by the factions. Zander is a natural born cultivator. A mortal who just happened to be born in just the right way and apparently, a hot commodity.\n\nThe protections on children end at thirteen and seven year old twins Zander and Xavier have until they become teenagers to discover their true potential and escape the ruling factions.\n\nThe average citizen doesn't know their populace is being farmed. The gang is on their own. With their family, and their two friends Mino and Akhet, the two boys train desperately to escape the Annual Brawl.\n\nOutside of their city bigger storms brew. The Anazi clan tear through the cosmos in search of their missing key. What does that have to do with two seven year olds who have barely left their backyard? The Anazi don't know, the thief is keeping quiet, and the twins have no idea.\n\nFrom clumsy axe fights in the backyard, to brawling factions in the streets, and up to the heights of a tower where gods fight one another, these four boys will create the ultimate bonds of brotherhood."
+};
+const NAMES = [{n:"Zander",c:"#b44cf0"},{n:"Xavier",c:"#f2a93b"},{n:"Mino",c:"#3f8cff"},{n:"Akhet",c:"#2fd6a0"}];
+const PRESETS = {
+  navy:  {bg:"#1b2735",accent:"#c9a227",title:"#c9a227",text:"#e8edf2",sub:"#9fb3c8",bold:"#ffffff",btnText:"#1b2735",strips:false,boldFirst:true,colorNames:false},
+  cover: {bg:"#0d0a14",accent:"#c08a3e",title:"#d9c2ff",text:"#e9e4f2",sub:"#a99cc4",bold:"#ffffff",btnText:"#0d0a14",strips:true,boldFirst:true,colorNames:true}
+};
+const COLORS = [["bg","Background"],["accent","Border, divider and button"],["title","Title"],["text","Main text"],["sub","Tagline"],["bold","Bold first sentence"],["btnText","Button text"]];
+const KEY = "rr-shoutout-v1";
+const $ = id => document.getElementById(id);
+const clone = o => JSON.parse(JSON.stringify(o));
+
+let S = Object.assign({}, clone(PRESETS.cover), clone(DEFAULT_TEXT), {names: clone(NAMES)});
+try { const saved = JSON.parse(localStorage.getItem(KEY)); if (saved) S = Object.assign(S, saved); } catch (e) {}
+
+const esc = t => t.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
+const reEsc = t => t.replace(/[.*+?^${}()|[\]\\]/g,"\\$&");
+
+function build(s) {
+  const url = esc(s.url), cover = esc(s.cover);
+  const cols = s.names.map(n => n.c);
+  const strip = arr => s.strips
+    ? `<div style="height: 6px; background-color: ${arr[0]}; background: linear-gradient(90deg, ${arr.join(", ")});"></div>\n`
+    : "";
+  const paras = s.desc.split(/\n\s*\n/).map(p => p.trim()).filter(Boolean).map((raw, i) => {
+    let p = esc(raw).replace(/\n/g, " ");
+    if (s.boldFirst && i === 0) p = p.replace(/^(.+?[.!?])(\s|$)/, `<strong style="color: ${s.bold};">$1</strong>$2`);
+    if (s.colorNames) s.names.forEach(n => {
+      const name = n.n.trim(); if (!name) return;
+      p = p.replace(new RegExp("\\b" + reEsc(esc(name)) + "\\b", "g"), `<strong style="color: ${n.c};">${esc(name)}</strong>`);
+    });
+    return `<p>${p}</p>`;
+  }).join("\n\n");
+  const tag = s.tag.trim() ? `<p style="text-align: center; margin: 0 0 8px 0; color: ${s.sub};"><em>${esc(s.tag)}</em></p>\n` : "";
+  return `<table style="border-collapse: separate; border-spacing: 0; width: 100%; overflow: hidden; background-color: ${s.bg}; border: 2px solid ${s.accent}; border-radius: 10px;">
+<tbody>
+<tr>
+<td style="padding: 0; border: none;">
+${strip(cols)}<div class="row" style="padding: 15px;">
+
+<div class="col-md-3">
+<div style="text-align: center; margin: 10px 5px;">
+<a href="${url}" rel="ugc nofollow">
+<img src="${cover}" style="max-width: 100%; border: 2px solid ${s.accent}; border-radius: 6px;" alt="Cover" />
+</a>
+</div>
+<p style="text-align: center; margin: 5px 0 10px 0;">
+<a href="${url}" rel="ugc nofollow" style="display: inline-block; background-color: ${s.accent}; color: ${s.btnText}; font-weight: bold; padding: 8px 16px; border-radius: 5px; text-decoration: none;">${esc(s.btn)}</a>
+</p>
+</div>
+
+<div class="col-md-9">
+<div style="margin: 10px 5px; color: ${s.text}; line-height: 1.6;">
+<h2 style="color: ${s.title}; margin: 0 0 4px 0; text-align: center;">
+<a href="${url}" rel="ugc nofollow" style="color: ${s.title}; text-decoration: none;">${esc(s.title)}</a>
+</h2>
+${tag}<hr style="border: 0; border-top: 1px solid ${s.accent}; margin: 8px 0 14px 0;" />
+
+${paras}
+</div>
+</div>
+
+</div>
+${strip(cols.slice().reverse())}</td>
+</tr>
+</tbody>
+</table>`;
+}
+
+function refresh() {
+  const html = build(S);
+  $("pv").innerHTML = html;
+  $("out").value = html;
+  try { localStorage.setItem(KEY, JSON.stringify(S)); } catch (e) {}
+}
+
+function syncInputs() {
+  COLORS.forEach(([k]) => { $("c-" + k).value = S[k]; $("h-" + k).textContent = S[k]; });
+  ["strips","boldFirst","colorNames"].forEach(k => $(k).checked = S[k]);
+  ["title","tag","desc","url","cover","btn"].forEach(k => $(k).value = S[k]);
+  S.names.forEach((n, i) => { $("nn" + i).value = n.n; $("nc" + i).value = n.c; });
+}
+
+// build controls
+$("colors").innerHTML = COLORS.map(([k, label]) =>
+  `<div class="color"><input type="color" id="c-${k}" aria-label="${label}"><span>${label}</span><code id="h-${k}"></code></div>`).join("");
+$("names").innerHTML = NAMES.map((_, i) =>
+  `<div class="name"><input type="text" id="nn${i}" aria-label="Name ${i+1}"><input type="color" id="nc${i}" aria-label="Color for name ${i+1}"></div>`).join("");
+
+COLORS.forEach(([k]) => $("c-" + k).addEventListener("input", e => { S[k] = e.target.value; $("h-" + k).textContent = e.target.value; refresh(); }));
+["strips","boldFirst","colorNames"].forEach(k => $(k).addEventListener("change", e => { S[k] = e.target.checked; refresh(); }));
+["title","tag","desc","url","cover","btn"].forEach(k => $(k).addEventListener("input", e => { S[k] = e.target.value; refresh(); }));
+NAMES.forEach((_, i) => {
+  $("nn" + i).addEventListener("input", e => { S.names[i].n = e.target.value; refresh(); });
+  $("nc" + i).addEventListener("input", e => { S.names[i].c = e.target.value; refresh(); });
+});
+
+$("p-navy").onclick  = () => { Object.assign(S, clone(PRESETS.navy));  syncInputs(); refresh(); };
+$("p-cover").onclick = () => { Object.assign(S, clone(PRESETS.cover)); syncInputs(); refresh(); };
+$("p-reset").onclick = () => {
+  if (!confirm("Reset everything, including the text, back to the original?")) return;
+  S = Object.assign({}, clone(PRESETS.cover), clone(DEFAULT_TEXT), {names: clone(NAMES)});
+  syncInputs(); refresh();
+};
+
+$("copy").onclick = async () => {
+  try { await navigator.clipboard.writeText($("out").value); }
+  catch (e) { $("out").select(); document.execCommand("copy"); }
+  $("ok").textContent = "Copied!";
+  setTimeout(() => $("ok").textContent = "", 2000);
+};
+
+syncInputs();
+refresh();
+</script>
+</body>
+</html>
