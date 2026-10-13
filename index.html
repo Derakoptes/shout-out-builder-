@@ -123,11 +123,11 @@ const DEFAULT_TEXT = {
 };
 const NAMES = [{n:"Zander",c:"#b44cf0"},{n:"Xavier",c:"#f2a93b"},{n:"Mino",c:"#3f8cff"},{n:"Akhet",c:"#2fd6a0"}];
 const PRESETS = {
-  navy:  {bg:"#1b2735",accent:"#c9a227",title:"#c9a227",text:"#e8edf2",sub:"#9fb3c8",bold:"#ffffff",btnText:"#1b2735",strips:false,boldFirst:true,colorNames:false},
-  cover: {bg:"#0d0a14",accent:"#c08a3e",title:"#d9c2ff",text:"#e9e4f2",sub:"#a99cc4",bold:"#ffffff",btnText:"#0d0a14",strips:true,boldFirst:true,colorNames:true}
+  navy:  {bg:"#1b2735",accent:"#c9a227",titleColor:"#c9a227",text:"#e8edf2",sub:"#9fb3c8",bold:"#ffffff",btnText:"#1b2735",strips:false,boldFirst:true,colorNames:false},
+  cover: {bg:"#0d0a14",accent:"#c08a3e",titleColor:"#d9c2ff",text:"#e9e4f2",sub:"#a99cc4",bold:"#ffffff",btnText:"#0d0a14",strips:true,boldFirst:true,colorNames:true}
 };
-const COLORS = [["bg","Background"],["accent","Border, divider and button"],["title","Title"],["text","Main text"],["sub","Tagline"],["bold","Bold first sentence"],["btnText","Button text"]];
-const KEY = "rr-shoutout-v1";
+const COLORS = [["bg","Background"],["accent","Border, divider and button"],["titleColor","Title"],["text","Main text"],["sub","Tagline"],["bold","Bold first sentence"],["btnText","Button text"]];
+const KEY = "rr-shoutout-v2";
 const $ = id => document.getElementById(id);
 const clone = o => JSON.parse(JSON.stringify(o));
 
@@ -172,8 +172,8 @@ ${strip(cols)}<div class="row" style="padding: 15px;">
 
 <div class="col-md-9">
 <div style="margin: 10px 5px; color: ${s.text}; line-height: 1.6;">
-<h2 style="color: ${s.title}; margin: 0 0 4px 0; text-align: center;">
-<a href="${url}" rel="ugc nofollow" style="color: ${s.title}; text-decoration: none;">${esc(s.title)}</a>
+<h2 style="color: ${s.titleColor}; margin: 0 0 4px 0; text-align: center;">
+<a href="${url}" rel="ugc nofollow" style="color: ${s.titleColor}; text-decoration: none;">${esc(s.title)}</a>
 </h2>
 ${tag}<hr style="border: 0; border-top: 1px solid ${s.accent}; margin: 8px 0 14px 0;" />
 
